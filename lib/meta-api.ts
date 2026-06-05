@@ -41,7 +41,6 @@ function buildQueryParams(filters?: TemplateFilters): string {
     "category",
     "language",
     "components",
-    "rejected_reason",
   ];
   params.set("fields", fields.join(","));
 

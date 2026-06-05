@@ -30,11 +30,15 @@ export async function GET(request: Request) {
     const templates = await metaApi.templates.list(activeId, filters);
     return NextResponse.json(templates);
   } catch (error: any) {
+    console.error("[templates] Meta API error:", JSON.stringify(error?.body ?? error));
+
     const code = error?.body?.error?.code;
-    const message =
-      META_ERROR_MESSAGES[code] ??
-      error?.body?.error?.message ??
-      "Erro ao buscar templates";
+    const metaMsg = error?.body?.error?.message;
+    const metaSubcode = error?.body?.error?.error_subcode;
+    const translated = META_ERROR_MESSAGES[code];
+    const message = metaMsg
+      ? `${translated ?? "Erro da Meta"}: ${metaMsg}${metaSubcode ? ` (subcode: ${metaSubcode})` : ""}`
+      : translated ?? "Erro ao buscar templates";
 
     return NextResponse.json(
       { error: message },
@@ -66,11 +70,15 @@ export async function POST(request: Request) {
     const template = await metaApi.templates.create(activeId, parsed.data);
     return NextResponse.json(template, { status: 201 });
   } catch (error: any) {
+    console.error("[templates] Meta API error:", JSON.stringify(error?.body ?? error));
+
     const code = error?.body?.error?.code;
-    const message =
-      META_ERROR_MESSAGES[code] ??
-      error?.body?.error?.message ??
-      "Erro ao criar template";
+    const metaMsg = error?.body?.error?.message;
+    const metaSubcode = error?.body?.error?.error_subcode;
+    const translated = META_ERROR_MESSAGES[code];
+    const message = metaMsg
+      ? `${translated ?? "Erro da Meta"}: ${metaMsg}${metaSubcode ? ` (subcode: ${metaSubcode})` : ""}`
+      : translated ?? "Erro ao criar template";
 
     return NextResponse.json(
       { error: message, code },

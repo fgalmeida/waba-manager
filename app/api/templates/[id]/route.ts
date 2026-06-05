@@ -21,12 +21,13 @@ export async function GET(
     const template = await metaApi.templates.getById(id, activeId);
     return NextResponse.json(template);
   } catch (error: any) {
+    console.error("[templates] GET error:", JSON.stringify(error?.body ?? error));
     const code = error?.body?.error?.code;
-    const message =
-      META_ERROR_MESSAGES[code] ??
-      error?.body?.error?.message ??
-      "Template nao encontrado";
-
+    const metaMsg = error?.body?.error?.message;
+    const translated = META_ERROR_MESSAGES[code];
+    const message = metaMsg
+      ? `${translated ?? "Erro da Meta"}: ${metaMsg}`
+      : translated ?? "Template nao encontrado";
     return NextResponse.json(
       { error: message },
       { status: error?.status ?? 404 }
@@ -61,12 +62,13 @@ export async function POST(
     const template = await metaApi.templates.update(id, activeId, parsed.data);
     return NextResponse.json(template);
   } catch (error: any) {
+    console.error("[templates] POST error:", JSON.stringify(error?.body ?? error));
     const code = error?.body?.error?.code;
-    const message =
-      META_ERROR_MESSAGES[code] ??
-      error?.body?.error?.message ??
-      "Erro ao editar template";
-
+    const metaMsg = error?.body?.error?.message;
+    const translated = META_ERROR_MESSAGES[code];
+    const message = metaMsg
+      ? `${translated ?? "Erro da Meta"}: ${metaMsg}`
+      : translated ?? "Erro ao editar template";
     return NextResponse.json(
       { error: message },
       { status: error?.status ?? 500 }
@@ -101,12 +103,13 @@ export async function DELETE(
     await metaApi.templates.delete(activeId, name);
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    console.error("[templates] DELETE error:", JSON.stringify(error?.body ?? error));
     const code = error?.body?.error?.code;
-    const message =
-      META_ERROR_MESSAGES[code] ??
-      error?.body?.error?.message ??
-      "Erro ao deletar template";
-
+    const metaMsg = error?.body?.error?.message;
+    const translated = META_ERROR_MESSAGES[code];
+    const message = metaMsg
+      ? `${translated ?? "Erro da Meta"}: ${metaMsg}`
+      : translated ?? "Erro ao deletar template";
     return NextResponse.json(
       { error: message },
       { status: error?.status ?? 500 }
