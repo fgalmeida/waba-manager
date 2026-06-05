@@ -58,22 +58,28 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    console.log("[templates] POST body:", JSON.stringify(body));
+
     const parsed = createTemplateSchema.safeParse(body);
 
     if (!parsed.success) {
+      console.log("[templates] Zod validation failed:", parsed.error.issues);
       return NextResponse.json(
         { error: "Dados invalidos", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
 
+    console.log("[templates] Parsed payload:", JSON.stringify(parsed.data));
     const template = await metaApi.templates.create(activeId, parsed.data);
     return NextResponse.json(template, { status: 201 });
   } catch (error: any) {
-    console.error("[templates] Meta API error:", JSON.stringify(error?.body ?? error));
+    console.error("[templates] POST catch:", error?.constructor?.name, error?.message, error?.cause);
+    console.error("[templates] POST error body:", JSON.stringify(error?.body));
+    console.error("[templates] POST error full:", Object.keys(error ?? {}));
 
     const code = error?.body?.error?.code;
-    const metaMsg = error?.body?.error?.message;
+    const metaMsg = error?.body?.error?.message ?? error?.message;
     const metaSubcode = error?.body?.error?.error_subcode;
     const translated = META_ERROR_MESSAGES[code];
     const message = metaMsg
