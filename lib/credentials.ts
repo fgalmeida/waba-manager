@@ -137,8 +137,8 @@ export async function setActiveAccountId(id: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set("active_account_id", id, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: false,
+    sameSite: "lax",
     path: "/",
   });
 }
