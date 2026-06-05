@@ -14,11 +14,11 @@
     "shadcn",
     "tailwindcss"
   ],
-  "author": "",
+  "author": "fgalmeida",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/seu-usuario/waba-manager"
+    "url": "https://github.com/fgalmeida/waba-manager"
   },
   "scripts": {
     "dev": "next dev",
